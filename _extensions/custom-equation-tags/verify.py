@@ -26,7 +26,7 @@ for eq_id, expected_tag in [("eq-upstream", "Condition"), ("eq-markov", "Markov"
         errors.append(f"FAIL: '{eq_id}' missing tag '{expected_tag}' in equation display")
 
 # Check LaTeX-symbol-tagged equations render without \text{} wrapping
-for eq_id, latex_tag in [("eq-pythag", r"\star")]:
+for eq_id, latex_tag in [("eq-pythag", r"\star"), ("eq-cyc-star", r"\star")]:
     span = soup.find(id=eq_id)
     if not span:
         errors.append(f"FAIL: No element with id='{eq_id}' found for LaTeX-tagged equation")
@@ -49,7 +49,7 @@ for eq_id, expected_text in [("eq-upstream", "Condition"), ("eq-markov", "Markov
         errors.append(f"FAIL: Link to '{eq_id}' says '{link_text}', expected '{expected_text}'")
 
 # Check LaTeX tag cross-references contain math rendering (not plain text)
-for eq_id, latex_tag in [("eq-pythag", r"\star")]:
+for eq_id, latex_tag in [("eq-pythag", r"\star"), ("eq-cyc-star", r"\star")]:
     link = soup.find("a", href=f"#{eq_id}")
     if not link:
         errors.append(f"FAIL: No link to '#{eq_id}' found for LaTeX-tagged equation")

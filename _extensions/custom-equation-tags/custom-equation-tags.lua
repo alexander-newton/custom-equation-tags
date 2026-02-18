@@ -16,6 +16,8 @@ local function extract_quoted_text(quoted_node)
           table.insert(parts, elem.text)
         elseif elem.t == "RawInline" then
           table.insert(parts, elem.text)
+        elseif elem.t == "Math" then
+          table.insert(parts, elem.text)
         elseif elem.t == "Space" then
           table.insert(parts, " ")
         end
