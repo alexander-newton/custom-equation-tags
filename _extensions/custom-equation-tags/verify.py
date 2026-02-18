@@ -26,19 +26,26 @@ for eq_id, expected_tag in [("eq-upstream", "Condition"), ("eq-markov", "Markov"
         errors.append(f"FAIL: '{eq_id}' missing tag '{expected_tag}' in equation display")
 
 # Check LaTeX-symbol-tagged equations render without \text{} wrapping
-for eq_id, latex_tag in [("eq-pythag", r"\star"), ("eq-cyc-star", r"\star")]:
+for eq_id, latex_tag in [
+    ("eq-pythag", r"\star"),
+    ("eq-cyc-star", r"\star"),
+    ("eq-dblstar", r"\star\star"),
+    ("eq-dagger", r"\dagger"),
+    ("eq-pairwise", r"\star"),
+    ("eq-pairwise2", r"\dagger"),
+]:
     span = soup.find(id=eq_id)
     if not span:
         errors.append(f"FAIL: No element with id='{eq_id}' found for LaTeX-tagged equation")
         continue
     raw = str(span)
-    # Should have \tag{\star} NOT \tag{\text{\star}}
+    # Should have \tag{$<latex>$} NOT \tag{\text{<latex>}}
     if rf"\tag{{\text{{{latex_tag}}}}}" in raw:
         errors.append(f"FAIL: '{eq_id}' has \\text{{}} wrapping around LaTeX tag '{latex_tag}'")
-    if rf"\tag{{{latex_tag}}}" not in raw:
+    if rf"\tag{{${latex_tag}$}}" not in raw:
         errors.append(f"FAIL: '{eq_id}' missing LaTeX tag '{latex_tag}' in equation display")
 
-# Check cross-references
+# Check cross-references for plain-text tags
 for eq_id, expected_text in [("eq-upstream", "Condition"), ("eq-markov", "Markov")]:
     link = soup.find("a", href=f"#{eq_id}")
     if not link:
@@ -49,7 +56,14 @@ for eq_id, expected_text in [("eq-upstream", "Condition"), ("eq-markov", "Markov
         errors.append(f"FAIL: Link to '{eq_id}' says '{link_text}', expected '{expected_text}'")
 
 # Check LaTeX tag cross-references contain math rendering (not plain text)
-for eq_id, latex_tag in [("eq-pythag", r"\star"), ("eq-cyc-star", r"\star")]:
+for eq_id, latex_tag in [
+    ("eq-pythag", r"\star"),
+    ("eq-cyc-star", r"\star"),
+    ("eq-dblstar", r"\star\star"),
+    ("eq-dagger", r"\dagger"),
+    ("eq-pairwise", r"\star"),
+    ("eq-pairwise2", r"\dagger"),
+]:
     link = soup.find("a", href=f"#{eq_id}")
     if not link:
         errors.append(f"FAIL: No link to '#{eq_id}' found for LaTeX-tagged equation")

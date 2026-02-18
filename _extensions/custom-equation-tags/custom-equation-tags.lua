@@ -30,9 +30,11 @@ local function extract_quoted_text(quoted_node)
   return nil
 end
 
--- Check if a tag value contains LaTeX commands (backslash)
+-- Check if a tag value requires math mode (LaTeX commands, subscripts, superscripts)
 local function is_latex_tag(tag_value)
   return string.find(tag_value, "\\") ~= nil
+      or string.find(tag_value, "_") ~= nil
+      or string.find(tag_value, "%^") ~= nil
 end
 
 -- Parse equation attributes from inline elements
@@ -126,12 +128,12 @@ local function strip_attributes(inlines, start, end_idx)
 end
 
 -- Inject \tag{} into LaTeX math
+-- Math-mode tags use $...$ inside \tag{} because amsmath/MathJax render
+-- tag content in text mode, where math-only symbols (e.g. \star) are undefined.
 local function inject_tag(math_content, tag_value)
   if is_latex_tag(tag_value) then
-    -- LaTeX symbols: use directly without \text{} wrapping
-    return "\\tag{" .. tag_value .. "} " .. math_content
+    return "\\tag{$" .. tag_value .. "$} " .. math_content
   else
-    -- Plain text: wrap in \text{} for proper rendering
     return "\\tag{\\text{" .. tag_value .. "}} " .. math_content
   end
 end
@@ -175,7 +177,7 @@ local function process_para(el)
           -- Store a marker with the equation ID
           local latex_tag
           if is_latex_tag(tag_value) then
-            latex_tag = "\\tag{" .. tag_value .. "}"
+            latex_tag = "\\tag{$" .. tag_value .. "$}"
           else
             latex_tag = "\\tag{\\text{" .. tag_value .. "}}"
           end

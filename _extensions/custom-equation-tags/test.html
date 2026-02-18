@@ -72,7 +72,7 @@ window.Quarto = {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="test.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../../test.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -103,9 +103,16 @@ window.Quarto = {
 <p>Another tagged equation:</p>
 <p><span id="eq-markov" class="tagged-equation"><span class="math display">\[\tag{\text{Markov}} E \perp^t \sigma(\mathcal{C}(E) \setminus S) \mid \sigma(S)\]</span></span></p>
 <p>A LaTeX-symbol-tagged equation (should show “★” not “”):</p>
-<p><span id="eq-pythag" class="tagged-equation"><span class="math display">\[\tag{\star} x^2 + y^2 = z^2\]</span></span></p>
+<p><span id="eq-pythag" class="tagged-equation"><span class="math display">\[\tag{$\star$} x^2 + y^2 = z^2\]</span></span></p>
 <p>A dollar-wrapped LaTeX tag (should show “★” same as bare backslash):</p>
-<p><span id="eq-cyc-star" class="tagged-equation"><span class="math display">\[\tag{\star} y = x\]</span></span></p>
+<p><span id="eq-cyc-star" class="tagged-equation"><span class="math display">\[\tag{$\star$} y = x\]</span></span></p>
+<p>Dollar-wrapped double-star tag:</p>
+<p><span id="eq-dblstar" class="tagged-equation"><span class="math display">\[\tag{$\star\star$} \frac{a}{b} = \frac{c}{d}\]</span></span></p>
+<p>Dollar-wrapped dagger tag:</p>
+<p><span id="eq-dagger" class="tagged-equation"><span class="math display">\[\tag{$\dagger$} \alpha + \beta = \gamma\]</span></span></p>
+<p>Inline-paragraph equation with dollar-wrapped tag. For any variables <span class="math inline">\(X_i\)</span> and <span class="math inline">\(X_j\)</span>, consider <span id="eq-pairwise" class="tagged-equation"><span class="math display">\[\tag{$\star$} \frac{P^{t_{X_j}}(X_i)}{P^{t_{X_i}}(X_j)} = \frac{P^t(X_i)}{P^t(X_j)}.\]</span></span></p>
+<p>Another inline-paragraph equation referencing prior tags. Combined with <a href="#eq-pairwise" class="quarto-xref"><span class="math inline">\(\star\)</span></a>, this means <span id="eq-pairwise2" class="tagged-equation"><span class="math display">\[\tag{$\dagger$} \frac{Q(X_i)}{Q(X_j)} = \frac{R(X_i)}{R(X_j)}. \]</span></span></p>
+<p>Xrefs to <a href="#eq-pairwise" class="quarto-xref"><span class="math inline">\(\star\)</span></a> and <a href="#eq-pairwise2" class="quarto-xref"><span class="math inline">\(\dagger\)</span></a> in running text.</p>
 <p>Another normal numbered equation (should be number 2, not 3):</p>
 <p><span id="eq-second"><span class="math display">\[a = b + c \tag{2}\]</span></span></p>
 </section>
@@ -117,6 +124,10 @@ window.Quarto = {
 <li>Tagged ref: <a href="#eq-markov" class="quarto-xref">Markov</a> should show “Markov”</li>
 <li>LaTeX tag ref: <a href="#eq-pythag" class="quarto-xref"><span class="math inline">\(\star\)</span></a> should show the star symbol</li>
 <li>Dollar-wrapped LaTeX tag ref: <a href="#eq-cyc-star" class="quarto-xref"><span class="math inline">\(\star\)</span></a> should show the star symbol</li>
+<li>Double-star tag ref: <a href="#eq-dblstar" class="quarto-xref"><span class="math inline">\(\star\star\)</span></a> should show ★★</li>
+<li>Dagger tag ref: <a href="#eq-dagger" class="quarto-xref"><span class="math inline">\(\dagger\)</span></a> should show †</li>
+<li>Inline equation ref: <a href="#eq-pairwise" class="quarto-xref"><span class="math inline">\(\star\)</span></a> should show ★</li>
+<li>Inline equation ref: <a href="#eq-pairwise2" class="quarto-xref"><span class="math inline">\(\dagger\)</span></a> should show †</li>
 <li>Normal ref: <a href="#eq-second" class="quarto-xref">Equation&nbsp;2</a> should show “Equation 2”</li>
 </ul>
 </section>

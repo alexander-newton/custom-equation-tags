@@ -176,15 +176,54 @@ A normal numbered equation:
 
 A tagged equation (should show ``Condition'' not a number):
 
-\begin{equation*}\tag{Condition}\label{eq-upstream}
+\begin{equation*}\tag{\text{Condition}}\label{eq-upstream}
 Y \uparrow^{t} E \mid S \setminus \{ Y \}
 \end{equation*}
 
 Another tagged equation:
 
-\begin{equation*}\tag{Markov}\label{eq-markov}
+\begin{equation*}\tag{\text{Markov}}\label{eq-markov}
 E \perp^t \sigma(\mathcal{C}(E) \setminus S) \mid \sigma(S)
 \end{equation*}
+
+A LaTeX-symbol-tagged equation (should show ``★'' not ``\star''):
+
+\begin{equation*}\tag{$\star$}\label{eq-pythag}
+x^2 + y^2 = z^2
+\end{equation*}
+
+A dollar-wrapped LaTeX tag (should show ``★'' same as bare backslash):
+
+\begin{equation*}\tag{$\star$}\label{eq-cyc-star}
+y = x
+\end{equation*}
+
+Dollar-wrapped double-star tag:
+
+\begin{equation*}\tag{$\star\star$}\label{eq-dblstar}
+\frac{a}{b} = \frac{c}{d}
+\end{equation*}
+
+Dollar-wrapped dagger tag:
+
+\begin{equation*}\tag{$\dagger$}\label{eq-dagger}
+\alpha + \beta = \gamma
+\end{equation*}
+
+Inline-paragraph equation with dollar-wrapped tag. For any variables
+\(X_i\) and \(X_j\), consider
+\begin{equation*}\tag{$\star$}\label{eq-pairwise}
+\frac{P^{t_{X_j}}(X_i)}{P^{t_{X_i}}(X_j)} = \frac{P^t(X_i)}{P^t(X_j)}.
+\end{equation*}
+
+Another inline-paragraph equation referencing prior tags. Combined with
+\hyperref[eq-pairwise]{$\star$}, this means
+\begin{equation*}\tag{$\dagger$}\label{eq-pairwise2}
+\frac{Q(X_i)}{Q(X_j)} = \frac{R(X_i)}{R(X_j)}. 
+\end{equation*}
+
+Xrefs to \hyperref[eq-pairwise]{$\star$} and
+\hyperref[eq-pairwise2]{$\dagger$} in running text.
 
 Another normal numbered equation (should be number 2, not 3):
 
@@ -201,6 +240,21 @@ Another normal numbered equation (should be number 2, not 3):
   ``Condition''
 \item
   Tagged ref: \hyperref[eq-markov]{Markov} should show ``Markov''
+\item
+  LaTeX tag ref: \hyperref[eq-pythag]{$\star$} should show the star
+  symbol
+\item
+  Dollar-wrapped LaTeX tag ref: \hyperref[eq-cyc-star]{$\star$} should
+  show the star symbol
+\item
+  Double-star tag ref: \hyperref[eq-dblstar]{$\star\star$} should show
+  ★★
+\item
+  Dagger tag ref: \hyperref[eq-dagger]{$\dagger$} should show †
+\item
+  Inline equation ref: \hyperref[eq-pairwise]{$\star$} should show ★
+\item
+  Inline equation ref: \hyperref[eq-pairwise2]{$\dagger$} should show †
 \item
   Normal ref: Equation~\ref{eq-second} should show ``Equation 2''
 \end{itemize}
