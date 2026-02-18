@@ -127,14 +127,15 @@ local function strip_attributes(inlines, start, end_idx)
   return result
 end
 
--- Inject \tag{} into LaTeX math
--- Math-mode tags use $...$ inside \tag{} because amsmath/MathJax render
--- tag content in text mode, where math-only symbols (e.g. \star) are undefined.
+-- Inject \tag{} into math content for HTML/MathJax output.
+-- MathJax's \tag{} renders content in text mode, so:
+--   - Plain text tags use \tag{Label} directly (no \text{} needed)
+--   - Math-mode tags use \tag{$...$} to switch back to math mode
 local function inject_tag(math_content, tag_value)
   if is_latex_tag(tag_value) then
     return "\\tag{$" .. tag_value .. "$} " .. math_content
   else
-    return "\\tag{\\text{" .. tag_value .. "}} " .. math_content
+    return "\\tag{" .. tag_value .. "} " .. math_content
   end
 end
 

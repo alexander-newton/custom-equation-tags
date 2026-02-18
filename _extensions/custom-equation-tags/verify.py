@@ -22,7 +22,7 @@ for eq_id, expected_tag in [("eq-upstream", "Condition"), ("eq-markov", "Markov"
         errors.append(f"FAIL: No element with id='{eq_id}' found")
         continue
     raw = str(span)
-    if f"\\tag{{\\text{{{expected_tag}}}}}" not in raw:
+    if f"\\tag{{{expected_tag}}}" not in raw:
         errors.append(f"FAIL: '{eq_id}' missing tag '{expected_tag}' in equation display")
 
 # Check LaTeX-symbol-tagged equations render without \text{} wrapping
