@@ -1,0 +1,6 @@
+title: Custom Equation Tags
+author: Alexander Newton
+version: 0.1.0
+contributes:
+  filters:
+    - custom-equation-tags.lua
