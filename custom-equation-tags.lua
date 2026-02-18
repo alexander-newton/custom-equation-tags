@@ -5,15 +5,32 @@
 local eq_tags = {}
 
 -- Extract text from a Quoted AST node
--- Quoted node contains the inline content in c[1]
+-- Walks the content list to handle both Str and RawInline (LaTeX) elements
 local function extract_quoted_text(quoted_node)
   if quoted_node and quoted_node.t == "Quoted" then
-    if quoted_node.c and #quoted_node.c >= 1 then
-      local content = quoted_node.c[1]
-      return pandoc.utils.stringify(content)
+    local content = quoted_node.content
+    if content and #content > 0 then
+      local parts = {}
+      for _, elem in ipairs(content) do
+        if elem.t == "Str" then
+          table.insert(parts, elem.text)
+        elseif elem.t == "RawInline" then
+          table.insert(parts, elem.text)
+        elseif elem.t == "Space" then
+          table.insert(parts, " ")
+        end
+      end
+      if #parts > 0 then
+        return table.concat(parts)
+      end
     end
   end
   return nil
+end
+
+-- Check if a tag value contains LaTeX commands (backslash)
+local function is_latex_tag(tag_value)
+  return string.find(tag_value, "\\") ~= nil
 end
 
 -- Parse equation attributes from inline elements
@@ -108,8 +125,13 @@ end
 
 -- Inject \tag{} into LaTeX math
 local function inject_tag(math_content, tag_value)
-  -- For display math, we inject the tag command
-  return "\\tag{\\text{" .. tag_value .. "}} " .. math_content
+  if is_latex_tag(tag_value) then
+    -- LaTeX symbols: use directly without \text{} wrapping
+    return "\\tag{" .. tag_value .. "} " .. math_content
+  else
+    -- Plain text: wrap in \text{} for proper rendering
+    return "\\tag{\\text{" .. tag_value .. "}} " .. math_content
+  end
 end
 
 -- Store math content for LaTeX processing
@@ -149,7 +171,13 @@ local function process_para(el)
         elseif quarto.doc.is_format("latex") or quarto.doc.is_format("pdf") then
           -- LaTeX: mark for conversion to raw block
           -- Store a marker with the equation ID
-          local marker_inline = pandoc.RawInline("latex", "\\begin{equation*}\\tag{" .. tag_value .. "}\\label{" .. eq_id .. "}\n" .. elem.text .. "\n\\end{equation*}")
+          local latex_tag
+          if is_latex_tag(tag_value) then
+            latex_tag = "\\tag{" .. tag_value .. "}"
+          else
+            latex_tag = "\\tag{\\text{" .. tag_value .. "}}"
+          end
+          local marker_inline = pandoc.RawInline("latex", "\\begin{equation*}" .. latex_tag .. "\\label{" .. eq_id .. "}\n" .. elem.text .. "\n\\end{equation*}")
           inlines[i] = marker_inline
         end
       end
@@ -202,17 +230,31 @@ local function resolve_cites(el)
 
       if quarto.doc.is_format("html") then
         -- HTML: create a link to the equation
+        local link_content
+        if is_latex_tag(tag_value) then
+          -- LaTeX symbols: render as inline math
+          link_content = {pandoc.Math("InlineMath", tag_value)}
+        else
+          -- Plain text: use as-is
+          link_content = {pandoc.Str(tag_value)}
+        end
         return pandoc.Link(
-          {pandoc.Str(tag_value)},
+          link_content,
           "#" .. cite_id,
           "",
           {class = "quarto-xref"}
         )
       elseif quarto.doc.is_format("latex") or quarto.doc.is_format("pdf") then
         -- LaTeX: use hyperref
+        local hyperref_content
+        if is_latex_tag(tag_value) then
+          hyperref_content = "$" .. tag_value .. "$"
+        else
+          hyperref_content = tag_value
+        end
         return pandoc.RawInline(
           "latex",
-          "\\hyperref[" .. cite_id .. "]{" .. tag_value .. "}"
+          "\\hyperref[" .. cite_id .. "]{" .. hyperref_content .. "}"
         )
       end
     end

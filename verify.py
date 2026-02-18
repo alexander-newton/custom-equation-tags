@@ -25,6 +25,19 @@ for eq_id, expected_tag in [("eq-upstream", "Condition"), ("eq-markov", "Markov"
     if f"\\tag{{\\text{{{expected_tag}}}}}" not in raw:
         errors.append(f"FAIL: '{eq_id}' missing tag '{expected_tag}' in equation display")
 
+# Check LaTeX-symbol-tagged equations render without \text{} wrapping
+for eq_id, latex_tag in [("eq-pythag", r"\star")]:
+    span = soup.find(id=eq_id)
+    if not span:
+        errors.append(f"FAIL: No element with id='{eq_id}' found for LaTeX-tagged equation")
+        continue
+    raw = str(span)
+    # Should have \tag{\star} NOT \tag{\text{\star}}
+    if rf"\tag{{\text{{{latex_tag}}}}}" in raw:
+        errors.append(f"FAIL: '{eq_id}' has \\text{{}} wrapping around LaTeX tag '{latex_tag}'")
+    if rf"\tag{{{latex_tag}}}" not in raw:
+        errors.append(f"FAIL: '{eq_id}' missing LaTeX tag '{latex_tag}' in equation display")
+
 # Check cross-references
 for eq_id, expected_text in [("eq-upstream", "Condition"), ("eq-markov", "Markov")]:
     link = soup.find("a", href=f"#{eq_id}")
@@ -34,6 +47,20 @@ for eq_id, expected_text in [("eq-upstream", "Condition"), ("eq-markov", "Markov
     link_text = link.get_text().strip()
     if link_text != expected_text:
         errors.append(f"FAIL: Link to '{eq_id}' says '{link_text}', expected '{expected_text}'")
+
+# Check LaTeX tag cross-references contain math rendering (not plain text)
+for eq_id, latex_tag in [("eq-pythag", r"\star")]:
+    link = soup.find("a", href=f"#{eq_id}")
+    if not link:
+        errors.append(f"FAIL: No link to '#{eq_id}' found for LaTeX-tagged equation")
+        continue
+    # Link should contain a math span for LaTeX rendering, not raw text
+    math_span = link.find("span", class_=lambda c: c and "math" in c)
+    if not math_span:
+        errors.append(
+            f"FAIL: Link to '{eq_id}' should contain math rendering for LaTeX tag, "
+            f"got plain text: '{link.get_text().strip()}'"
+        )
 
 # Check normal equations still have numbers
 for eq_id in ["eq-normal", "eq-second"]:

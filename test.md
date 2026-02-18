@@ -21,6 +21,10 @@ Another tagged equation:
 
 $$E \perp^t \sigma(\mathcal{C}(E) \setminus S) \mid \sigma(S)$${#eq-markov tag="Markov"}
 
+A LaTeX-symbol-tagged equation (should show "★" not "\star"):
+
+$$x^2 + y^2 = z^2$${#eq-pythag tag="\star"}
+
 Another normal numbered equation (should be number 2, not 3):
 
 $$a = b + c$${#eq-second}
@@ -30,4 +34,5 @@ $$a = b + c$${#eq-second}
 - Normal ref: @eq-normal should show "Equation 1"
 - Tagged ref: @eq-upstream should show "Condition"
 - Tagged ref: @eq-markov should show "Markov"
+- LaTeX tag ref: @eq-pythag should show the star symbol
 - Normal ref: @eq-second should show "Equation 2"
