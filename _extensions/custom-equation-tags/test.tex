@@ -259,6 +259,23 @@ Another normal numbered equation (should be number 2, not 3):
   Normal ref: Equation~\ref{eq-second} should show ``Equation 2''
 \end{itemize}
 
+\subsection{Cross-references inside
+math}\label{cross-references-inside-math}
+
+A plain-text tag ref inside math (should resolve ``Condition'' as a
+link):
+
+\[\text{Truncated Factorization (\hyperref[eq-upstream]{Condition})} = 0\]
+
+A LaTeX-symbol tag ref inside math (should resolve star symbol as a
+link):
+
+\[\text{See \hyperref[eq-pythag]{$\star$} for details}\]
+
+Multiple refs inside one equation:
+
+\[\text{Combining \hyperref[eq-upstream]{Condition} and \hyperref[eq-pythag]{$\star$} gives a result}\]
+
 
 
 

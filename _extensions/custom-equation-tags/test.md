@@ -60,3 +60,17 @@ $$a = b + c$${#eq-second}
 - Inline equation ref: @eq-pairwise should show ★
 - Inline equation ref: @eq-pairwise2 should show †
 - Normal ref: @eq-second should show "Equation 2"
+
+## Cross-references inside math
+
+A plain-text tag ref inside math (should resolve "Condition" as a link):
+
+$$\text{Truncated Factorization (@eq-upstream)} = 0$$
+
+A LaTeX-symbol tag ref inside math (should resolve star symbol as a link):
+
+$$\text{See @eq-pythag for details}$$
+
+Multiple refs inside one equation:
+
+$$\text{Combining @eq-upstream and @eq-pythag gives a result}$$

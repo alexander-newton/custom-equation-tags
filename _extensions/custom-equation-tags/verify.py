@@ -86,6 +86,44 @@ for eq_id in ["eq-normal", "eq-second"]:
     if "Equation" not in link_text:
         errors.append(f"FAIL: Normal ref '{eq_id}' says '{link_text}', expected 'Equation N'")
 
+# Check cross-references inside math content resolve correctly
+# Find display math elements containing \href (MathJax link syntax)
+import re
+
+all_math = soup.find_all("span", class_=lambda c: c and "math" in c)
+display_math_texts = []
+for m in all_math:
+    raw = str(m)
+    if "display" in raw.lower() or "DisplayMath" in raw:
+        display_math_texts.append(raw)
+
+# Gather all math text content to search for resolved refs
+all_math_raw = " ".join(str(m) for m in all_math)
+
+# Plain text tag ref inside math: @eq-upstream -> \href{#eq-upstream}{Condition}
+if r"\href{#eq-upstream}{Condition}" not in all_math_raw:
+    errors.append(
+        "FAIL: @eq-upstream inside math not resolved to \\href{#eq-upstream}{Condition}"
+    )
+
+# LaTeX symbol tag ref inside math: @eq-pythag -> \href{#eq-pythag}{$\star$}
+if r"\href{#eq-pythag}{$\star$}" not in all_math_raw:
+    errors.append(
+        "FAIL: @eq-pythag inside math not resolved to \\href{#eq-pythag}{$\\star$}"
+    )
+
+# Unresolved @patterns should NOT appear for known tags
+for eq_id in ["eq-upstream", "eq-pythag"]:
+    # Check that no math element still has the raw @eq-id pattern
+    # (only check math elements that originally contained a reference)
+    pattern = re.compile(r"@" + re.escape(eq_id) + r"(?![{])")
+    for m in all_math:
+        raw = str(m)
+        if pattern.search(raw) and r"\href{#" + eq_id + "}" not in raw:
+            errors.append(
+                f"FAIL: Unresolved @{eq_id} found in math content: {raw[:100]}"
+            )
+
 # Check numbering: normal equations should be 1 and 2 (no gap)
 for eq_id, expected_num in [("eq-normal", "1"), ("eq-second", "2")]:
     span = soup.find(id=eq_id)

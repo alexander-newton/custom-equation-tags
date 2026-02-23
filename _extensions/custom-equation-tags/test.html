@@ -131,6 +131,15 @@ window.Quarto = {
 <li>Normal ref: <a href="#eq-second" class="quarto-xref">Equation&nbsp;2</a> should show “Equation 2”</li>
 </ul>
 </section>
+<section id="cross-references-inside-math" class="level2">
+<h2 class="anchored" data-anchor-id="cross-references-inside-math">Cross-references inside math</h2>
+<p>A plain-text tag ref inside math (should resolve “Condition” as a link):</p>
+<p><span class="math display">\[\text{Truncated Factorization (\href{#eq-upstream}{Condition})} = 0\]</span></p>
+<p>A LaTeX-symbol tag ref inside math (should resolve star symbol as a link):</p>
+<p><span class="math display">\[\text{See \href{#eq-pythag}{$\star$} for details}\]</span></p>
+<p>Multiple refs inside one equation:</p>
+<p><span class="math display">\[\text{Combining \href{#eq-upstream}{Condition} and \href{#eq-pythag}{$\star$} gives a result}\]</span></p>
+</section>
 
 </main>
 <!-- /main column -->

@@ -225,6 +225,32 @@ local function process_para(el)
   return el
 end
 
+-- Resolve @eq-id references inside math content (Pass 2)
+-- Pandoc doesn't parse citations in math, so we use string.gsub
+local function resolve_math_refs(el)
+  local text = el.text
+  local changed = false
+
+  text = string.gsub(text, "@([%w_%-]+)", function(id)
+    if eq_tags[id] then
+      changed = true
+      local tag = eq_tags[id]
+      local display = is_latex_tag(tag) and ("$" .. tag .. "$") or tag
+
+      if quarto.doc.is_format("html") then
+        return "\\href{#" .. id .. "}{" .. display .. "}"
+      elseif quarto.doc.is_format("latex") or quarto.doc.is_format("pdf") then
+        return "\\hyperref[" .. id .. "]{" .. display .. "}"
+      end
+    end
+    -- Return nil to leave unmatched @patterns unchanged
+  end)
+
+  if changed then
+    return pandoc.Math(el.mathtype, text)
+  end
+end
+
 -- Pass 2: Resolve cross-references
 local function resolve_cites(el)
   if el.t == "Cite" then
@@ -273,6 +299,7 @@ return {
     Para = process_para
   },
   {
-    Cite = resolve_cites
+    Cite = resolve_cites,
+    Math = resolve_math_refs
   }
 }
