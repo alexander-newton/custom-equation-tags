@@ -37,6 +37,12 @@ See @eq-upstream for details.
 
 This produces a link displaying the custom tag text (e.g. "Condition") rather than "Equation 1".
 
+Cross-references also work inside math content, where Pandoc doesn't normally parse citations:
+
+```markdown
+$$x + y \quad \text{(by @eq-upstream)}$$
+```
+
 ### Mixing tagged and numbered equations
 
 Normal equations continue to be numbered sequentially, skipping any tagged equations:
@@ -57,9 +63,9 @@ Supports HTML and PDF (LaTeX) output.
 
 ## Verification
 
-A test document (`test.md`) and verification script (`verify.py`) are included. To run:
+A test document (`test.md`) and verification script (`verify.py`) are included in `_extensions/custom-equation-tags/`. To run from the project root:
 
 ```bash
-quarto render test.md --to html
-uv run verify.py
+quarto render _extensions/custom-equation-tags/test.md --to html
+uv run _extensions/custom-equation-tags/verify.py
 ```
